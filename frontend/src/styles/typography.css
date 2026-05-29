@@ -1,0 +1,33 @@
+:root {
+  --font-body: 'Inter', system-ui, -apple-system, Segoe UI, sans-serif;
+  --font-heading: 'Poppins', 'Inter', sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+.dashboard-topbar h1,
+.section-title,
+.sidebar-brand span {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.btn,
+.nav-hash-link {
+  font-family: var(--font-body);
+  font-weight: 600;
+}
