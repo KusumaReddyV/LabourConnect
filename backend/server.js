@@ -22,7 +22,6 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-
 connectDB().catch((err) => {
   console.error('DB connection failed:', err.message);
   process.exit(1);

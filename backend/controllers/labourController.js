@@ -5,7 +5,7 @@ import User from '../models/User.js';
 import { createNotification } from '../utils/createNotification.js';
 import { getCategoryImage } from '../utils/categoryImages.js';
 import { finalizeJobCompletion, COMPLETED_STATUSES } from '../utils/earningsService.js';
-
+import { uploadBufferToCloudinary } from '../utils/uploadToCloudinary.js';
 export const getMyProfile = async (req, res) => {
   const labour = await Labour.findOne({ userId: req.user._id }).populate(
     'userId',
@@ -42,8 +42,15 @@ export const updateProfile = async (req, res) => {
   });
 
   if (req.body.category) labour.categoryImage = getCategoryImage(labour.category);
+if (req.file) {
+  const result = await uploadBufferToCloudinary(req.file.buffer, {
+    folder: 'labourconnect/profile-images',
+    resource_type: 'image',
+  });
 
-  if (req.file) labour.profileImage = `/uploads/${req.file.filename}`;
+  labour.profileImage = result.secure_url;
+}
+  
   if (req.body.profileImage === '') labour.profileImage = '';
 
   await labour.save();

@@ -4,6 +4,7 @@ import Client from '../models/Client.js';
 import generateToken from '../utils/generateToken.js';
 import { getCategoryImage } from '../utils/categoryImages.js';
 import { normalizeEmail, normalizeRole, roleDisplayName } from '../utils/authHelpers.js';
+import { uploadBufferToCloudinary } from '../utils/uploadToCloudinary.js';
 
 const buildAuthResponse = (user) => {
   const role = normalizeRole(user.role);
@@ -42,12 +43,29 @@ export const registerLabour = async (req, res) => {
     role: 'labour',
   });
 
-  const profileImage = req.files?.profileImage?.[0]
-    ? `/uploads/${req.files.profileImage[0].filename}`
-    : '';
-  const aadhaarImage = req.files?.aadhaarImage?.[0]
-    ? `/uploads/${req.files.aadhaarImage[0].filename}`
-    : '';
+ let profileImage = '';
+let aadhaarImage = '';
+
+const profileFile = req.files?.profileImage?.[0];
+const aadhaarFile = req.files?.aadhaarImage?.[0];
+
+if (profileFile) {
+  const result = await uploadBufferToCloudinary(profileFile.buffer, {
+    folder: 'labourconnect/profile-images',
+    resource_type: 'image',
+  });
+
+  profileImage = result.secure_url;
+}
+
+if (aadhaarFile) {
+  const result = await uploadBufferToCloudinary(aadhaarFile.buffer, {
+    folder: 'labourconnect/aadhaar-images',
+    resource_type: 'image',
+  });
+
+  aadhaarImage = result.secure_url;
+}
 
   const skillsList = Array.isArray(skills)
     ? skills
